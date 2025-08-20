@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- 費用類別初始資料 -->
+    
+    <!-- 第一層：大分類 -->
+    <record id="expense_category_01" model="cpk.expense.category">
+        <field name="code">01</field>
+        <field name="name">交通費(公出)</field>
+        <field name="is_leaf" eval="False"/>
+    </record>
+
+    <record id="expense_category_02" model="cpk.expense.category">
+        <field name="code">02</field>
+        <field name="name">差旅費</field>
+        <field name="is_leaf" eval="False"/>
+    </record>
+
+    <record id="expense_category_03" model="cpk.expense.category">
+        <field name="code">03</field>
+        <field name="name">膳宿費</field>
+        <field name="is_leaf" eval="False"/>
+    </record>
+
+    <record id="expense_category_04" model="cpk.expense.category">
+        <field name="code">04</field>
+        <field name="name">辦公用品</field>
+        <field name="is_leaf" eval="False"/>
+    </record>
+
+    <record id="expense_category_05" model="cpk.expense.category">
+        <field name="code">05</field>
+        <field name="name">通訊費</field>
+        <field name="is_leaf" eval="False"/>
+    </record>
+
+    <record id="expense_category_06" model="cpk.expense.category">
+        <field name="code">06</field>
+        <field name="name">教育訓練</field>
+        <field name="is_leaf" eval="False"/>
+    </record>
+
+    <!-- 第二層：交通費(公出)細項 -->
+    <record id="expense_category_0101" model="cpk.expense.category">
+        <field name="code">0101</field>
+        <field name="name">過路費</field>
+        <field name="parent_id" ref="expense_category_01"/>
+        <field name="is_leaf" eval="True"/>
+    </record>
+
+    <record id="expense_category_0102" model="cpk.expense.category">
+        <field name="code">0102</field>
+        <field name="name">計程車車資</field>
+        <field name="parent_id" ref="expense_category_01"/>
+        <field name="is_leaf" eval="True"/>
+    </record>
+
+    <record id="expense_category_0103" model="cpk.expense.category">
+        <field name="code">0103</field>
+        <field name="name">停車費</field>
+        <field name="parent_id" ref="expense_category_01"/>
+        <field name="is_leaf" eval="True"/>
+    </record>
+
+    <record id="expense_category_0104" model="cpk.expense.category">
+        <field name="code">0104</field>
+        <field name="name">油資-公務車</field>
+        <field name="parent_id" ref="expense_category_01"/>
+        <field name="is_leaf" eval="True"/>
+    </record>
+
+    <record id="expense_category_0106" model="cpk.expense.category">
+        <field name="code">0106</field>
+        <field name="name">巴士</field>
+        <field name="parent_id" ref="expense_category_01"/>
+        <field name="is_leaf" eval="True"/>
+    </record>
+
+    <record id="expense_category_0107" model="cpk.expense.category">
+        <field name="code">0107</field>
+        <field name="name">高鐵</field>
+        <field name="parent_id" ref="expense_category_01"/>
+        <field name="is_leaf" eval="True"/>
+    </record>
+
+    <record id="expense_category_0108" model="cpk.expense.category">
+        <field name="code">0108</field>
+        <field name="name">火車、捷運</field>
+        <field name="parent_id" ref="expense_category_01"/>
+        <field name="is_leaf" eval="True"/>
+    </record>
+
+    <record id="expense_category_0109" model="cpk.expense.category">
+        <field name="code">0109</field>
+        <field name="name">油資-私車公用</field>
+        <field name="parent_id" ref="expense_category_01"/>
+        <field name="is_leaf" eval="True"/>
+    </record>
+
+    <!-- 第二層：差旅費細項 -->
+    <record id="expense_category_0201" model="cpk.expense.category">
+        <field name="code">0201</field>
+        <field name="name">機票款</field>
+        <field name="parent_id" ref="expense_category_02"/>
+        <field name="is_leaf" eval="True"/>
+    </record>
+
+    <record id="expense_category_0202" model="cpk.expense.category">
+        <field name="code">0202</field>
+        <field name="name">住宿費</field>
+        <field name="parent_id" ref="expense_category_02"/>
+        <field name="is_leaf" eval="True"/>
+    </record>
+
+    <record id="expense_category_0203" model="cpk.expense.category">
+        <field name="code">0203</field>
+        <field name="name">出差津貼</field>
+        <field name="parent_id" ref="expense_category_02"/>
+        <field name="is_leaf" eval="True"/>
+    </record>
+
+    <!-- 第二層：膳宿費細項 -->
+    <record id="expense_category_0301" model="cpk.expense.category">
+        <field name="code">0301</field>
+        <field name="name">餐費-內部</field>
+        <field name="parent_id" ref="expense_category_03"/>
+        <field name="is_leaf" eval="True"/>
+    </record>
+
+    <record id="expense_category_0302" model="cpk.expense.category">
+        <field name="code">0302</field>
+        <field name="name">餐費-外部</field>
+        <field name="parent_id" ref="expense_category_03"/>
+        <field name="is_leaf" eval="True"/>
+    </record>
+
+    <record id="expense_category_0303" model="cpk.expense.category">
+        <field name="code">0303</field>
+        <field name="name">住宿費-內部</field>
+        <field name="parent_id" ref="expense_category_03"/>
+        <field name="is_leaf" eval="True"/>
+    </record>
+
+    <record id="expense_category_0304" model="cpk.expense.category">
+        <field name="code">0304</field>
+        <field name="name">住宿費-外部</field>
+        <field name="parent_id" ref="expense_category_03"/>
+        <field name="is_leaf" eval="True"/>
+    </record>
+
+    <!-- 第二層：辦公用品細項 -->
+    <record id="expense_category_0401" model="cpk.expense.category">
+        <field name="code">0401</field>
+        <field name="name">文具用品</field>
+        <field name="parent_id" ref="expense_category_04"/>
+        <field name="is_leaf" eval="True"/>
+    </record>
+
+    <record id="expense_category_0402" model="cpk.expense.category">
+        <field name="code">0402</field>
+        <field name="name">印刷費</field>
+        <field name="parent_id" ref="expense_category_04"/>
+        <field name="is_leaf" eval="True"/>
+    </record>
+
+    <record id="expense_category_0403" model="cpk.expense.category">
+        <field name="code">0403</field>
+        <field name="name">電腦耗材</field>
+        <field name="parent_id" ref="expense_category_04"/>
+        <field name="is_leaf" eval="True"/>
+    </record>
+
+    <!-- 第二層：通訊費細項 -->
+    <record id="expense_category_0501" model="cpk.expense.category">
+        <field name="code">0501</field>
+        <field name="name">電話費</field>
+        <field name="parent_id" ref="expense_category_05"/>
+        <field name="is_leaf" eval="True"/>
+    </record>
+
+    <record id="expense_category_0502" model="cpk.expense.category">
+        <field name="code">0502</field>
+        <field name="name">網路費</field>
+        <field name="parent_id" ref="expense_category_05"/>
+        <field name="is_leaf" eval="True"/>
+    </record>
+
+    <record id="expense_category_0503" model="cpk.expense.category">
+        <field name="code">0503</field>
+        <field name="name">郵寄費</field>
+        <field name="parent_id" ref="expense_category_05"/>
+        <field name="is_leaf" eval="True"/>
+    </record>
+
+    <!-- 第二層：教育訓練細項 -->
+    <record id="expense_category_0601" model="cpk.expense.category">
+        <field name="code">0601</field>
+        <field name="name">外部訓練費</field>
+        <field name="parent_id" ref="expense_category_06"/>
+        <field name="is_leaf" eval="True"/>
+    </record>
+
+    <record id="expense_category_0602" model="cpk.expense.category">
+        <field name="code">0602</field>
+        <field name="name">教材費</field>
+        <field name="parent_id" ref="expense_category_06"/>
+        <field name="is_leaf" eval="True"/>
+    </record>
+
+    <record id="expense_category_0603" model="cpk.expense.category">
+        <field name="code">0603</field>
+        <field name="name">證照考試費</field>
+        <field name="parent_id" ref="expense_category_06"/>
+        <field name="is_leaf" eval="True"/>
+    </record>
+
+    <!-- 稅別初始資料 -->
+    <record id="tax_code_vn" model="cpk.tax.code">
+        <field name="code">VN</field>
+        <field name="name">與稅無關</field>
+    </record>
+
+    <record id="tax_code_vb" model="cpk.tax.code">
+        <field name="code">VB</field>
+        <field name="name">進項三聯式收銀機統一發票、載有稅額憑證－進貨及費用應稅5%(稅額500元以下免辦登錄)</field>
+    </record>
+
+    <record id="tax_code_va" model="cpk.tax.code">
+        <field name="code">VA</field>
+        <field name="name">進項二聯式發票、電子計算機發票－進貨及費用應稅5%(稅額500元以下免辦登錄)</field>
+    </record>
+
+    <record id="tax_code_v1" model="cpk.tax.code">
+        <field name="code">V1</field>
+        <field name="name">進項稅5%海關代徵營業稅繳納證－進貨及費用</field>
+    </record>
+
+    <record id="tax_code_v3" model="cpk.tax.code">
+        <field name="code">V3</field>
+        <field name="name">進項稅5%載有稅額之其他憑證(二聯式收銀機統一發票)－進貨及費用</field>
+    </record>
+
+    <record id="tax_code_v2" model="cpk.tax.code">
+        <field name="code">V2</field>
+        <field name="name">進項稅5%三聯式收銀機(電子發票)－進貨及費用</field>
+    </record>
+
+    <record id="tax_code_v4" model="cpk.tax.code">
+        <field name="code">V4</field>
+        <field name="name">進項稅5%三聯式－進貨及費用</field>
+    </record>
+
+</odoo>

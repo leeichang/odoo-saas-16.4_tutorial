@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- 付款方式 Tree View -->
+    <record id="view_account_payment_method_tree" model="ir.ui.view">
+        <field name="name">account.payment.method.tree</field>
+        <field name="model">account.payment.method</field>
+        <field name="arch" type="xml">
+            <tree string="付款方式" editable="top">
+                <field name="name"/>
+                <field name="code"/>
+                <field name="payment_type"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- 付款方式 Form View -->
+    <record id="view_account_payment_method_form" model="ir.ui.view">
+        <field name="name">account.payment.method.form</field>
+        <field name="model">account.payment.method</field>
+        <field name="arch" type="xml">
+            <form string="付款方式">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="付款方式名稱"/>
+                        </h1>
+                    </div>
+                    
+                    <group>
+                        <group>
+                            <field name="code"/>
+                            <field name="payment_type"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- 付款方式 Search View -->
+    <record id="view_account_payment_method_search" model="ir.ui.view">
+        <field name="name">account.payment.method.search</field>
+        <field name="model">account.payment.method</field>
+        <field name="arch" type="xml">
+            <search string="付款方式搜尋">
+                <field name="name"/>
+                <field name="code"/>
+                <field name="payment_type"/>
+                <separator/>
+                <filter name="filter_inbound" string="收款" domain="[('payment_type', '=', 'inbound')]"/>
+                <filter name="filter_outbound" string="付款" domain="[('payment_type', '=', 'outbound')]"/>
+                <group expand="0" string="分組">
+                    <filter string="付款類型" name="group_payment_type" context="{'group_by': 'payment_type'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_account_payment_method" model="ir.actions.act_window">
+        <field name="name">付款方式</field>
+        <field name="res_model">account.payment.method</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                建立付款方式設定！
+            </p>
+        </field>
+    </record>
+
+</odoo>

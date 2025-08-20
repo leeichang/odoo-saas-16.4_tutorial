@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- 財務出納群組 -->
+    <record id="group_cpk_finance_cashier" model="res.groups">
+        <field name="name">財務出納</field>
+        <field name="category_id" ref="base.module_category_accounting"/>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+        <field name="comment">財務出納人員，可查看所有費用請款單據</field>
+    </record>
+
+    <!-- 記錄規則：員工只能看到自己的請款單 -->
+    <record id="rule_cpk_reimburse_employee" model="ir.rule">
+        <field name="name">員工請款單存取權限</field>
+        <field name="model_id" ref="model_cpk_reimburse"/>
+        <field name="domain_force">[('employee_id.user_id', '=', user.id)]</field>
+        <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+
+    <!-- 記錄規則：財務出納和系統管理員可查看所有請款單 -->
+    <record id="rule_cpk_reimburse_finance" model="ir.rule">
+        <field name="name">財務出納請款單存取權限</field>
+        <field name="model_id" ref="model_cpk_reimburse"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('group_cpk_finance_cashier')), (4, ref('base.group_system'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+
+    <!-- 記錄規則：憑證資料存取權限 -->
+    <record id="rule_cpk_voucher_employee" model="ir.rule">
+        <field name="name">員工憑證存取權限</field>
+        <field name="model_id" ref="model_cpk_voucher"/>
+        <field name="domain_force">[('reimburse_id.employee_id.user_id', '=', user.id)]</field>
+        <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+
+    <record id="rule_cpk_voucher_finance" model="ir.rule">
+        <field name="name">財務出納憑證存取權限</field>
+        <field name="model_id" ref="model_cpk_voucher"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('group_cpk_finance_cashier')), (4, ref('base.group_system'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+
+    <!-- 記錄規則：請款明細存取權限 -->
+    <record id="rule_cpk_expense_line_employee" model="ir.rule">
+        <field name="name">員工請款明細存取權限</field>
+        <field name="model_id" ref="model_cpk_expense_line"/>
+        <field name="domain_force">[('reimburse_id.employee_id.user_id', '=', user.id)]</field>
+        <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+
+    <record id="rule_cpk_expense_line_finance" model="ir.rule">
+        <field name="name">財務出納請款明細存取權限</field>
+        <field name="model_id" ref="model_cpk_expense_line"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('group_cpk_finance_cashier')), (4, ref('base.group_system'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+
+</odoo>

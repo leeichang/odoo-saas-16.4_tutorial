@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- 主選單 -->
+    <menuitem id="menu_cpk_reimburse_main" 
+              name="費用請款" 
+              sequence="100" 
+              web_icon="cpk_reimburse,static/description/icon.png"/>
+
+    <!-- 費用請款單選單 -->
+    <menuitem id="menu_cpk_reimburse" 
+              name="費用請款" 
+              parent="menu_cpk_reimburse_main" 
+              action="action_cpk_reimburse" 
+              sequence="10"/>
+
+    <!-- 設定選單 -->
+    <menuitem id="menu_cpk_reimburse_configuration" 
+              name="設定" 
+              parent="menu_cpk_reimburse_main" 
+              sequence="90"/>
+
+    <!-- 費用類別設定 -->
+    <menuitem id="menu_cpk_expense_category" 
+              name="費用類別" 
+              parent="menu_cpk_reimburse_configuration" 
+              action="action_cpk_expense_category" 
+              groups="base.group_system"
+              sequence="10"/>
+
+    <!-- 稅別設定 -->
+    <menuitem id="menu_cpk_tax_code" 
+              name="稅別設定" 
+              parent="menu_cpk_reimburse_configuration" 
+              action="action_cpk_tax_code" 
+              groups="base.group_system"
+              sequence="20"/>
+
+    <!-- 付款方式設定 -->
+    <menuitem id="menu_cpk_payment_method" 
+              name="付款方式" 
+              parent="menu_cpk_reimburse_configuration" 
+              action="action_account_payment_method" 
+              groups="base.group_system"
+              sequence="30"/>
+
+</odoo>
