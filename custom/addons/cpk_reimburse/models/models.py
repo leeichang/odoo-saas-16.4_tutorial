@@ -178,6 +178,7 @@ class CpkExpenseLine(models.Model):
     analytic_account_id = fields.Many2one('account.analytic.account', '專案代號')
     description = fields.Text('費用說明')
     currency_id = fields.Many2one('res.currency', '幣別', related='reimburse_id.currency_id', store=True)
+    invoice_number = fields.Char('發票號碼', related='voucher_id.invoice_number', store=True, readonly=True)
 
     @api.onchange('amount_total')
     def _onchange_amount_total(self):
