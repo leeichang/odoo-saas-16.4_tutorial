@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- 請款單列印設定 Wizard Form -->
+    <record id="view_cpk_reimburse_print_wizard_form" model="ir.ui.view">
+        <field name="name">cpk.reimburse.print.wizard.form</field>
+        <field name="model">cpk.reimburse.print.wizard</field>
+        <field name="arch" type="xml">
+            <form string="請款單列印設定">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            請款單列印設定
+                        </h1>
+                    </div>
+                    
+                    <group>
+                        <field name="print_type" widget="radio"/>
+                    </group>
+                    
+                    <!-- 單一單號區域 -->
+                    <group string="單一單號列印" attrs="{'invisible': [('print_type', '!=', 'single')]}">
+                        <field name="reimburse_id" attrs="{'required': [('print_type', '=', 'single')]}"/>
+                    </group>
+                    
+                    <!-- 起訖日期區域 -->
+                    <group string="起訖日期列印" attrs="{'invisible': [('print_type', '!=', 'range')]}">
+                        <group>
+                            <field name="date_from"/>
+                            <field name="date_to"/>
+                        </group>
+                        <group>
+                            <field name="state_filter"/>
+                            <field name="employee_ids" widget="many2many_tags"/>
+                        </group>
+                    </group>
+                </sheet>
+                
+                <footer>
+                    <button name="action_print_report" string="列印" type="object" class="btn-primary"/>
+                    <button string="取消" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- 請款單列印設定 Action -->
+    <record id="action_cpk_reimburse_print_wizard" model="ir.actions.act_window">
+        <field name="name">請款單列印設定</field>
+        <field name="res_model">cpk.reimburse.print.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="context">{}</field>
+    </record>
+
+</odoo>

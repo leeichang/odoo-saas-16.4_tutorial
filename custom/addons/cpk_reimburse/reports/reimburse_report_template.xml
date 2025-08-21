@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- 請款單報表模板 -->
+    <template id="reimburse_report_template">
+        <t t-call="web.html_container">
+            <!-- 全域字體樣式 - 必須放在最外層 -->
+            <style>
+                @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&amp;display=swap');
+                
+                /* 全域字體設定 - 影響整個文檔包含 header */
+                html, body, * {
+                    font-family: 'Noto Sans TC', 'Microsoft JhengHei', 'PingFang TC', 'Helvetica Neue', Arial, sans-serif !important;
+                }
+                
+                /* 特別加強 header 和公司資訊區域 */
+                .header, .header *, 
+                .o_company_document_layout, .o_company_document_layout *,
+                .address, .address *,
+                div[t-field="company.partner_id"], 
+                div[t-field="company.partner_id"] *,
+                .o_background_header,
+                .o_background_header * {
+                    font-family: 'Noto Sans TC', 'Microsoft JhengHei', 'PingFang TC', 'Helvetica Neue', Arial, sans-serif !important;
+                }
+            </style>
+            
+            <t t-call="web.external_layout">
+                <div class="page">
+                    <style>
+                        
+                        .table th, .table td {
+                            font-family: 'Noto Sans TC', 'Microsoft JhengHei', 'PingFang TC', 'Helvetica Neue', Arial, sans-serif !important;
+                            font-size: 12px;
+                            padding: 8px;
+                        }
+                        
+                        h1, h2, h3, h4, h5, h6 {
+                            font-family: 'Noto Sans TC', 'Microsoft JhengHei', 'PingFang TC', 'Helvetica Neue', Arial, sans-serif !important;
+                        }
+                        
+                        /* 確保數字正常顯示 */
+                        .number {
+                            font-family: 'Noto Sans TC', Arial, sans-serif !important;
+                            font-variant-numeric: lining-nums;
+                        }
+                        
+                        /* 強制數字靠右對齊 */
+                        .table td.text-right,
+                        .table th.text-right {
+                            text-align: right !important;
+                        }
+                        
+                        .table td.text-center,
+                        .table th.text-center {
+                            text-align: center !important;
+                        }
+                    </style>
+                    <div class="container">
+                        <!-- 公司抬頭 -->
+                        <div class="row">
+                            <div class="col-12 text-center">
+                                <h2>費用請款單</h2>
+                            </div>
+                        </div>
+                        
+                        <t t-if="docs">
+                            <t t-foreach="docs" t-as="doc">
+                                
+                                <!-- 基本資訊區塊 -->
+                                <div class="row mt-3">
+                                    <div class="col-12">
+                                        <table class="table table-bordered">
+                                            <tr>
+                                                <th width="15%">請款單號:</th>
+                                                <td width="35%" class="text-right"><span class="number" t-esc="doc.name or '未設定'"/></td>
+                                                <th width="15%">請款人員:</th>
+                                                <td width="35%"><span t-esc="doc.employee_id.name if doc.employee_id else '未設定'"/></td>
+                                            </tr>
+                                            <tr>
+                                                <th>請款日期:</th>
+                                                <td class="text-right"><span class="number" t-esc="doc.reimburse_date or '未設定'"/></td>
+                                                <th>付款對象:</th>
+                                                <td><span t-esc="doc.partner_id.name if doc.partner_id else '未設定'"/></td>
+                                            </tr>
+                                            <tr>
+                                                <th>付款方式:</th>
+                                                <td><span t-esc="doc.payment_method_id.name if doc.payment_method_id else '未設定'"/></td>
+                                                <th>帳款到期日:</th>
+                                                <td class="text-right"><span class="number" t-esc="doc.due_date or '未設定'"/></td>
+                                            </tr>
+                                            <tr>
+                                                <th>銀行:</th>
+                                                <td><span t-esc="doc.bank_id.name if doc.bank_id else '未設定'"/></td>
+                                                <th>銀行帳號:</th>
+                                                <td class="text-right"><span class="number" t-esc="doc.bank_account or '未設定'"/></td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+
+                                <!-- 請款明細 -->
+                                <div class="row mt-3">
+                                    <div class="col-12">
+                                        <h5>請款明細</h5>
+                                        <t t-if="doc.expense_line_ids">
+                                            <table class="table table-bordered table-sm">
+                                                <thead>
+                                                    <tr>
+                                                        <th class="text-center" width="8%">項次</th>
+                                                        <th width="25%">費用類別</th>
+                                                        <th width="15%">成本中心</th>
+                                                        <th class="text-right" width="13%">含稅金額</th>
+                                                        <th class="text-right" width="13%">未稅金額</th>
+                                                        <th class="text-right" width="13%">稅額</th>
+                                                        <th width="13%">費用說明</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <t t-foreach="doc.expense_line_ids" t-as="line">
+                                                        <tr>
+                                                            <td class="text-center"><span class="number" t-esc="line.sequence"/></td>
+                                                            <td><span t-esc="line.expense_category_id.name"/></td>
+                                                            <td><span t-esc="line.cost_center_id.name"/></td>
+                                                            <td class="text-right"><span class="number" t-esc="'{:,.0f}'.format(line.amount_total or 0)"/></td>
+                                                            <td class="text-right"><span class="number" t-esc="'{:,.0f}'.format(line.amount_untaxed or 0)"/></td>
+                                                            <td class="text-right"><span class="number" t-esc="'{:,.0f}'.format(line.tax_amount or 0)"/></td>
+                                                            <td><span t-esc="line.description"/></td>
+                                                        </tr>
+                                                    </t>
+                                                </tbody>
+                                                <tfoot>
+                                                    <tr>
+                                                        <th colspan="3" class="text-right">合計:</th>
+                                                        <th class="text-right"><span class="number" t-esc="'{:,.0f}'.format(doc.total_amount or 0)"/></th>
+                                                        <th class="text-right"><span class="number" t-esc="'{:,.0f}'.format(sum(doc.expense_line_ids.mapped('amount_untaxed')) or 0)"/></th>
+                                                        <th class="text-right"><span class="number" t-esc="'{:,.0f}'.format(doc.total_tax or 0)"/></th>
+                                                        <th></th>
+                                                    </tr>
+                                                </tfoot>
+                                            </table>
+                                        </t>
+                                        <t t-if="not doc.expense_line_ids">
+                                            <p class="text-muted text-center">無請款明細資料</p>
+                                        </t>
+                                    </div>
+                                </div>
+
+                                <!-- 憑證資料 -->
+                                <div class="row mt-3">
+                                    <div class="col-12">
+                                        <h5>憑證資料</h5>
+                                        <t t-if="doc.voucher_ids">
+                                            <table class="table table-bordered table-sm">
+                                                <thead>
+                                                    <tr>
+                                                        <th width="12%">憑證類型</th>
+                                                        <th width="15%">發票日期</th>
+                                                        <th width="18%">發票號碼</th>
+                                                        <th width="12%">統一編號</th>
+                                                        <th class="text-right" width="14%">含稅金額</th>
+                                                        <th class="text-right" width="14%">未稅金額</th>
+                                                        <th class="text-right" width="15%">稅額</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <t t-foreach="doc.voucher_ids" t-as="voucher">
+                                                        <tr>
+                                                            <td><span t-esc="dict(voucher._fields['voucher_type'].selection).get(voucher.voucher_type, '')"/></td>
+                                                            <td class="text-center"><span class="number" t-esc="voucher.invoice_date"/></td>
+                                                            <td class="text-center"><span class="number" t-esc="voucher.invoice_number"/></td>
+                                                            <td class="text-center"><span class="number" t-esc="voucher.tax_id"/></td>
+                                                            <td class="text-right"><span class="number" t-esc="'{:,.0f}'.format(voucher.amount_total or 0)"/></td>
+                                                            <td class="text-right"><span class="number" t-esc="'{:,.0f}'.format(voucher.amount_untaxed or 0)"/></td>
+                                                            <td class="text-right"><span class="number" t-esc="'{:,.0f}'.format(voucher.tax_amount or 0)"/></td>
+                                                        </tr>
+                                                    </t>
+                                                </tbody>
+                                                <tfoot>
+                                                    <tr>
+                                                        <th colspan="4" class="text-right">憑證合計:</th>
+                                                        <th class="text-right"><span class="number" t-esc="'{:,.0f}'.format(sum(doc.voucher_ids.mapped('amount_total')) or 0)"/></th>
+                                                        <th class="text-right"><span class="number" t-esc="'{:,.0f}'.format(sum(doc.voucher_ids.mapped('amount_untaxed')) or 0)"/></th>
+                                                        <th class="text-right"><span class="number" t-esc="'{:,.0f}'.format(sum(doc.voucher_ids.mapped('tax_amount')) or 0)"/></th>
+                                                    </tr>
+                                                </tfoot>
+                                            </table>
+                                        </t>
+                                        <t t-if="not doc.voucher_ids">
+                                            <p class="text-muted text-center">無憑證資料</p>
+                                        </t>
+                                    </div>
+                                </div>
+
+                                <!-- 簽核區 -->
+                                <div class="row mt-5">
+                                    <div class="col-4 text-center">
+                                        <div style="border-top: 1px solid #000; padding-top: 5px;">
+                                            請款人簽章
+                                        </div>
+                                    </div>
+                                    <div class="col-4 text-center">
+                                        <div style="border-top: 1px solid #000; padding-top: 5px;">
+                                            主管簽章
+                                        </div>
+                                    </div>
+                                    <div class="col-4 text-center">
+                                        <div style="border-top: 1px solid #000; padding-top: 5px;">
+                                            財務簽章
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- 備註 -->
+                                <t t-if="doc.notes">
+                                    <div class="row mt-3">
+                                        <div class="col-12">
+                                            <h6>備註:</h6>
+                                            <p><span t-esc="doc.notes"/></p>
+                                        </div>
+                                    </div>
+                                </t>
+                            </t>
+                        </t>
+
+                        <t t-if="not docs">
+                            <div class="row">
+                                <div class="col-12 text-center">
+                                    <div class="alert alert-warning">
+                                        <h4>警告: 沒有找到資料</h4>
+                                        <p>請檢查資料是否正確傳遞</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </div>
+                </div>
+            </t>
+        </t>
+    </template>
+
+    <!-- 自定義紙張格式 -->
+    <record id="paperformat_cpk_reimburse" model="report.paperformat">
+        <field name="name">請款單報表格式</field>
+        <field name="default" eval="False"/>
+        <field name="format">A4</field>
+        <field name="page_height">0</field>
+        <field name="page_width">0</field>
+        <field name="orientation">Portrait</field>
+        <field name="margin_top">40</field>
+        <field name="margin_bottom">23</field>
+        <field name="margin_left">7</field>
+        <field name="margin_right">7</field>
+        <field name="header_line" eval="False"/>
+        <field name="header_spacing">35</field>
+        <field name="dpi">90</field>
+    </record>
+
+    <!-- 報表定義 -->
+    <record id="report_cpk_reimburse" model="ir.actions.report">
+        <field name="name">請款單</field>
+        <field name="model">cpk.reimburse</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">cpk_reimburse.reimburse_report_template</field>
+        <field name="report_file">cpk_reimburse.reimburse_report_template</field>
+        <field name="print_report_name">'請款單 - %s' % (object.name)</field>
+        <field name="binding_model_id" ref="model_cpk_reimburse"/>
+        <field name="binding_type">report</field>
+        <field name="paperformat_id" ref="cpk_reimburse.paperformat_cpk_reimburse"/>
+    </record>
+
+</odoo>

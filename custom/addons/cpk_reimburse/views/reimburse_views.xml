@@ -68,7 +68,7 @@
                                    options="{'no_create': True}">
                                 <tree string="請款明細" create="false">
                                     <field name="sequence" widget="handle"/>
-                                    <field name="voucher_id"/>
+                                    <field name="voucher_id" string="發票"/>
                                     <field name="expense_category_id"/>
                                     <field name="cost_center_id"/>
                                     <field name="amount_total"/>

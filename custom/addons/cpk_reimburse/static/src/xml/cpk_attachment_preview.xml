@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+    <!-- 回復使用簡單的繼承模式，通過JavaScript增強功能 -->
+    <t t-name="cpk_reimburse.CpkAttachmentPreviewField" t-inherit="web.Many2ManyBinaryField" t-inherit-mode="primary">
+        <!-- 保持原始模板，通過JavaScript DOM操作添加功能 -->
+    </t>
+</templates>

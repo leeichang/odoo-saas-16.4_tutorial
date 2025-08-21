@@ -146,6 +146,21 @@ class CpkVoucher(models.Model):
                     voucher.expense_line_ids.write({'reimburse_id': voucher.reimburse_id.id})
         return result
 
+    def name_get(self):
+        """自訂顯示名稱：顯示憑證類型 + 發票號碼"""
+        result = []
+        for record in self:
+            voucher_type_dict = dict(record._fields['voucher_type'].selection)
+            voucher_type_name = voucher_type_dict.get(record.voucher_type, '')
+            
+            if record.invoice_number:
+                name = f"{voucher_type_name} - {record.invoice_number}"
+            else:
+                name = f"{voucher_type_name} (未設定發票號碼)"
+            
+            result.append((record.id, name))
+        return result
+
 
 class CpkExpenseLine(models.Model):
     _name = 'cpk.expense.line'

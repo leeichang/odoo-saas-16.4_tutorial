@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- 費用請款單報表 Tree View -->
+    <record id="view_cpk_reimburse_report_tree" model="ir.ui.view">
+        <field name="name">cpk.reimburse.report.tree</field>
+        <field name="model">cpk.reimburse.report</field>
+        <field name="arch" type="xml">
+            <tree string="費用請款單報表" default_order="reimburse_date desc">
+                <field name="reimburse_name" string="請款單號"/>
+                <field name="reimburse_date" string="請款日期"/>
+                <field name="employee_id" string="請款人員"/>
+                <field name="partner_id" string="付款對象"/>
+                <field name="expense_category_id" string="費用類別"/>
+                <field name="cost_center_id" string="成本中心"/>
+                <field name="analytic_account_id" string="專案代號"/>
+                <field name="currency_id" string="幣別"/>
+                <field name="amount_total" string="金額含稅" sum="總含稅金額"/>
+                <field name="amount_untaxed" string="金額未稅" sum="總未稅金額"/>
+                <field name="tax_amount" string="稅額" sum="總稅額"/>
+                <field name="state" string="狀態" widget="badge"/>
+                <field name="due_date" string="到期日"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- 費用請款單報表 Search View -->
+    <record id="view_cpk_reimburse_report_search" model="ir.ui.view">
+        <field name="name">cpk.reimburse.report.search</field>
+        <field name="model">cpk.reimburse.report</field>
+        <field name="arch" type="xml">
+            <search string="費用請款單報表">
+                <!-- 搜尋欄位 -->
+                <field name="reimburse_name" string="請款單號"/>
+                <field name="partner_id" string="付款對象"/>
+                <field name="employee_id" string="請款人員"/>
+                <field name="expense_category_id" string="費用類別"/>
+                <field name="cost_center_id" string="成本中心"/>
+                <field name="analytic_account_id" string="專案代號"/>
+                
+                <!-- 過濾器 -->
+                <filter name="filter_draft" string="草稿" domain="[('state', '=', 'draft')]"/>
+                <filter name="filter_confirmed" string="已確認" domain="[('state', '=', 'confirmed')]"/>
+                <filter name="filter_approved" string="已審核" domain="[('state', '=', 'approved')]"/>
+                <filter name="filter_paid" string="已付款" domain="[('state', '=', 'paid')]"/>
+                
+                <separator/>
+                <filter name="filter_last_7_days" string="最近7天" 
+                        domain="[('reimburse_date', '&gt;=', '2025-08-13')]"/>
+                <filter name="filter_last_30_days" string="最近30天" 
+                        domain="[('reimburse_date', '&gt;=', '2025-07-21')]"/>
+                <filter name="filter_current_year" string="今年" 
+                        domain="[('reimburse_date', '&gt;=', '2025-01-01')]"/>
+                
+                <!-- 分組 -->
+                <group expand="0" string="分組依據">
+                    <filter name="group_state" string="狀態" context="{'group_by': 'state'}"/>
+                    <filter name="group_employee" string="請款人員" context="{'group_by': 'employee_id'}"/>
+                    <filter name="group_partner" string="付款對象" context="{'group_by': 'partner_id'}"/>
+                    <filter name="group_category" string="費用類別" context="{'group_by': 'expense_category_id'}"/>
+                    <filter name="group_cost_center" string="成本中心" context="{'group_by': 'cost_center_id'}"/>
+                    <filter name="group_project" string="專案代號" context="{'group_by': 'analytic_account_id'}"/>
+                    <filter name="group_currency" string="幣別" context="{'group_by': 'currency_id'}"/>
+                    <separator/>
+                    <filter name="group_year" string="年度" context="{'group_by': 'year'}"/>
+                    <filter name="group_month" string="月份" context="{'group_by': 'month'}"/>
+                    <filter name="group_quarter" string="季度" context="{'group_by': 'quarter'}"/>
+                    <filter name="group_date" string="請款日期" context="{'group_by': 'reimburse_date:month'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- 費用請款單報表 Pivot View -->
+    <record id="view_cpk_reimburse_report_pivot" model="ir.ui.view">
+        <field name="name">cpk.reimburse.report.pivot</field>
+        <field name="model">cpk.reimburse.report</field>
+        <field name="arch" type="xml">
+            <pivot string="費用請款單樞紐分析" default_order="reimburse_date desc">
+                <!-- 預設行分組 -->
+                <field name="expense_category_id" type="row"/>
+                <field name="cost_center_id" type="row"/>
+                
+                <!-- 預設列分組 -->
+                <field name="reimburse_date" type="col" interval="month"/>
+                
+                <!-- 預設量值 -->
+                <field name="amount_total" type="measure"/>
+                <field name="amount_untaxed" type="measure"/>
+                <field name="tax_amount" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <!-- 費用請款單報表 Graph View -->
+    <record id="view_cpk_reimburse_report_graph" model="ir.ui.view">
+        <field name="name">cpk.reimburse.report.graph</field>
+        <field name="model">cpk.reimburse.report</field>
+        <field name="arch" type="xml">
+            <graph string="費用請款單圖表分析" type="bar">
+                <!-- X軸 -->
+                <field name="expense_category_id"/>
+                <!-- Y軸量值 -->
+                <field name="amount_total" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <!-- Actions -->
+    <record id="action_cpk_reimburse_report" model="ir.actions.act_window">
+        <field name="name">費用請款單報表</field>
+        <field name="res_model">cpk.reimburse.report</field>
+        <field name="view_mode">tree,pivot,graph</field>
+        <field name="context">{
+            'search_default_group_category': 1
+        }</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                費用請款單報表
+            </p>
+            <p>
+                此報表提供費用請款的詳細分析，包含列印、樞紐分析和圖表功能。
+                您可以依據費用類別、成本中心、專案代號等維度進行分析。
+            </p>
+        </field>
+    </record>
+
+</odoo>
