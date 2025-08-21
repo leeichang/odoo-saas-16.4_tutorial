@@ -13,6 +13,7 @@
         - 費用類別設定
         - 稅別設定
         - 權限控制
+        - 標準報表功能（列印、樞紐分析、圖表）
     """,
 
     'author': "Cympotek",
@@ -34,9 +35,18 @@
         'views/expense_category_views.xml',
         'views/tax_code_views.xml',
         'views/payment_method_views.xml',
+        'views/reimburse_print_wizard_views.xml',
+        'reports/reimburse_report_template.xml',
         'views/reimburse_views.xml',
+        'views/reimburse_report_views.xml',
         'views/menus.xml',
     ],
+    # 'assets': {
+    #     'web.assets_backend': [
+    #         'cpk_reimburse/static/src/js/cpk_attachment_preview.js',
+    #         'cpk_reimburse/static/src/xml/cpk_attachment_preview.xml',
+    #     ],
+    # },
     # only loaded in demonstration mode
     'demo': [
     ],

@@ -14,6 +14,13 @@
               action="action_cpk_reimburse" 
               sequence="10"/>
 
+    <!-- 報表選單 -->
+    <menuitem id="menu_cpk_reimburse_report" 
+              name="費用請款報表" 
+              parent="menu_cpk_reimburse_main" 
+              action="action_cpk_reimburse_report" 
+              sequence="20"/>
+
     <!-- 設定選單 -->
     <menuitem id="menu_cpk_reimburse_configuration" 
               name="設定" 

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <!-- 請款單 Tree View -->
+    <!-- 請款單 Tree View (unchanged) -->
     <record id="view_cpk_reimburse_tree" model="ir.ui.view">
         <field name="name">cpk.reimburse.tree</field>
         <field name="model">cpk.reimburse</field>
@@ -27,6 +27,7 @@
         <field name="arch" type="xml">
             <form string="費用請款單">
                 <header>
+                    <button name="%(action_cpk_reimburse_print_wizard)d" string="列印" type="action" class="btn-primary"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,submitted,approved,paid,closed"/>
                 </header>
                 <sheet>
@@ -59,10 +60,15 @@
 
                     <notebook>
                         <page string="基本資料" name="basic_info">
-                            <field name="expense_line_ids">
-                                <tree string="請款明細" editable="bottom">
+                            <div class="oe_left">
+                                <button name="action_create_voucher" string="新增憑證" type="object" class="btn-primary"/>
+                            </div>
+                            <field name="expense_line_ids" 
+                                   context="{'default_reimburse_id': id}" 
+                                   options="{'no_create': True}">
+                                <tree string="請款明細" create="false">
                                     <field name="sequence" widget="handle"/>
-                                    <field name="voucher_id" domain="[('reimburse_id', '=', parent.id)]"/>
+                                    <field name="voucher_id"/>
                                     <field name="expense_category_id"/>
                                     <field name="cost_center_id"/>
                                     <field name="amount_total"/>
@@ -75,14 +81,13 @@
                             </field>
                         </page>
                         <page string="憑證明細" name="voucher_info">
-                            <field name="voucher_ids" readonly="1">
+                            <field name="voucher_ids" context="{'default_reimburse_id': id}">
                                 <tree string="憑證資料">
                                     <field name="voucher_type"/>
                                     <field name="invoice_date"/>
                                     <field name="tax_code_id"/>
                                     <field name="tax_id"/>
                                     <field name="invoice_number"/>
-                                    <field name="currency_id"/>
                                     <field name="amount_total"/>
                                     <field name="amount_untaxed"/>
                                     <field name="tax_amount"/>
@@ -106,7 +111,7 @@
         </field>
     </record>
 
-    <!-- 憑證資料 Form View -->
+    <!-- 憑證資料 Form View (updated for preview) -->
     <record id="view_cpk_voucher_form" model="ir.ui.view">
         <field name="name">cpk.voucher.form</field>
         <field name="model">cpk.voucher</field>
@@ -114,6 +119,7 @@
             <form string="憑證資料">
                 <sheet>
                     <group>
+                        <field name="reimburse_id" invisible="1"/>
                         <group>
                             <field name="voucher_type"/>
                             <field name="invoice_date"/>
@@ -122,7 +128,6 @@
                             <field name="invoice_number"/>
                         </group>
                         <group>
-                            <field name="currency_id"/>
                             <field name="amount_total"/>
                             <field name="amount_untaxed"/>
                             <field name="tax_amount"/>
@@ -136,8 +141,10 @@
 
                     <notebook>
                         <page string="請款明細">
-                            <field name="expense_line_ids">
+                            <field name="expense_line_ids" context="{'default_reimburse_id': reimburse_id}">
                                 <tree string="請款明細" editable="bottom">
+                                    <field name="reimburse_id" invisible="1"/>
+                                    <field name="voucher_id" invisible="1"/>
                                     <field name="sequence" widget="handle"/>
                                     <field name="expense_category_id"/>
                                     <field name="cost_center_id"/>
@@ -148,6 +155,23 @@
                                     <field name="description"/>
                                     <field name="currency_id" invisible="1"/>
                                 </tree>
+                                <form string="請款明細">
+                                    <group>
+                                        <field name="reimburse_id" invisible="1"/>
+                                        <field name="voucher_id" invisible="1"/>
+                                        <field name="sequence"/>
+                                        <field name="expense_category_id"/>
+                                        <field name="cost_center_id"/>
+                                        <field name="analytic_account_id"/>
+                                        <field name="amount_total"/>
+                                        <field name="amount_untaxed"/>
+                                        <field name="tax_amount"/>
+                                        <field name="currency_id" invisible="1"/>
+                                    </group>
+                                    <group>
+                                        <field name="description" colspan="2"/>
+                                    </group>
+                                </form>
                             </field>
                         </page>
                     </notebook>
@@ -156,42 +180,44 @@
         </field>
     </record>
 
-    <!-- 請款明細 Dialog Form -->
+    <!-- 請款明細完整 Dialog Form -->
     <record id="view_cpk_expense_line_dialog" model="ir.ui.view">
         <field name="name">cpk.expense.line.dialog</field>
         <field name="model">cpk.expense.line</field>
         <field name="arch" type="xml">
             <form string="費用報銷明細">
-                <group string="憑證資料">
-                    <group>
-                        <field name="voucher_id" options="{'no_create': True}"/>
+                <sheet>
+                    <!-- 憑證資料區塊 -->
+                    <group string="憑證資料">
+                        <field name="reimburse_id" invisible="1"/>
+                        <field name="voucher_id" context="{'default_reimburse_id': reimburse_id}" options="{'no_create': False}"/>
                     </group>
-                </group>
 
-                <group string="費用明細">
-                    <group>
-                        <field name="sequence"/>
-                        <field name="expense_category_id"/>
-                        <field name="cost_center_id"/>
-                        <field name="analytic_account_id"/>
+                    <!-- 費用明細區塊 -->
+                    <group string="費用明細">
+                        <group>
+                            <field name="sequence"/>
+                            <field name="expense_category_id"/>
+                            <field name="cost_center_id"/>
+                            <field name="analytic_account_id"/>
+                        </group>
+                        <group>
+                            <field name="amount_total"/>
+                            <field name="amount_untaxed"/>
+                            <field name="tax_amount"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
                     </group>
+                    
                     <group>
-                        <field name="amount_total"/>
-                        <field name="amount_untaxed"/>
-                        <field name="tax_amount"/>
-                        <field name="currency_id" invisible="1"/>
+                        <field name="description" colspan="2"/>
                     </group>
-                </group>
-                
-                <group>
-                    <field name="description" colspan="2"/>
-                </group>
-
+                </sheet>
             </form>
         </field>
     </record>
 
-    <!-- Actions -->
+    <!-- Actions (unchanged) -->
     <record id="action_cpk_reimburse" model="ir.actions.act_window">
         <field name="name">費用請款單</field>
         <field name="res_model">cpk.reimburse</field>

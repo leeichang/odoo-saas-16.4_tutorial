@@ -75,6 +75,20 @@ class CpkReimburse(models.Model):
             self.bank_id = False
             self.bank_account = ''
 
+    def action_create_voucher(self):
+        """開啟新增憑證的對話框"""
+        return {
+            'name': '新增憑證',
+            'type': 'ir.actions.act_window',
+            'res_model': 'cpk.voucher',
+            'view_mode': 'form',
+            'view_id': self.env.ref('cpk_reimburse.view_cpk_voucher_form').id,
+            'target': 'new',
+            'context': {
+                'default_reimburse_id': self.id,
+            }
+        }
+
 
 class CpkVoucher(models.Model):
     _name = 'cpk.voucher'
@@ -91,7 +105,7 @@ class CpkVoucher(models.Model):
     tax_id = fields.Char('統一編號')
     invoice_number = fields.Char('發票號碼')
     attachment_ids = fields.Many2many('ir.attachment', string='上傳憑證')
-    currency_id = fields.Many2one('res.currency', '交易幣別', required=True, default=lambda self: self.env.company.currency_id)
+    currency_id = fields.Many2one('res.currency', '交易幣別', related='reimburse_id.currency_id', store=True, readonly=True)
     amount_total = fields.Monetary('交易金額(含稅)', currency_field='currency_id')
     amount_untaxed = fields.Monetary('交易金額(未稅)', currency_field='currency_id')
     tax_amount = fields.Monetary('稅額', currency_field='currency_id')
@@ -100,10 +114,37 @@ class CpkVoucher(models.Model):
     # 關聯欄位
     expense_line_ids = fields.One2many('cpk.expense.line', 'voucher_id', '請款明細')
 
-    @api.onchange('amount_total', 'amount_untaxed')
-    def _onchange_amounts(self):
-        if self.amount_total and self.amount_untaxed:
+    @api.onchange('amount_total')
+    def _onchange_amount_total(self):
+        if self.amount_total:
+            # 計算未稅金額 = 含稅金額 / 1.05，四捨五入到整數
+            self.amount_untaxed = round(self.amount_total / 1.05)
+            # 計算稅額 = 含稅金額 - 未稅金額
             self.tax_amount = self.amount_total - self.amount_untaxed
+
+    @api.onchange('amount_untaxed')
+    def _onchange_amount_untaxed(self):
+        if self.amount_untaxed and not self.amount_total:
+            # 如果只輸入未稅金額，計算含稅金額
+            self.amount_total = round(self.amount_untaxed * 1.05)
+            self.tax_amount = self.amount_total - self.amount_untaxed
+
+    @api.model
+    def create(self, vals):
+        voucher = super(CpkVoucher, self).create(vals)
+        # 確保所有關聯的請款明細都設定正確的 reimburse_id
+        if voucher.reimburse_id and voucher.expense_line_ids:
+            voucher.expense_line_ids.write({'reimburse_id': voucher.reimburse_id.id})
+        return voucher
+
+    def write(self, vals):
+        result = super(CpkVoucher, self).write(vals)
+        # 如果更改了 reimburse_id，同步更新所有關聯的請款明細
+        if 'reimburse_id' in vals:
+            for voucher in self:
+                if voucher.expense_line_ids:
+                    voucher.expense_line_ids.write({'reimburse_id': voucher.reimburse_id.id})
+        return result
 
 
 class CpkExpenseLine(models.Model):
@@ -123,9 +164,19 @@ class CpkExpenseLine(models.Model):
     description = fields.Text('費用說明')
     currency_id = fields.Many2one('res.currency', '幣別', related='reimburse_id.currency_id', store=True)
 
-    @api.onchange('amount_total', 'amount_untaxed')
-    def _onchange_amounts(self):
-        if self.amount_total and self.amount_untaxed:
+    @api.onchange('amount_total')
+    def _onchange_amount_total(self):
+        if self.amount_total:
+            # 計算未稅金額 = 含稅金額 / 1.05，四捨五入到整數
+            self.amount_untaxed = round(self.amount_total / 1.05)
+            # 計算稅額 = 含稅金額 - 未稅金額
+            self.tax_amount = self.amount_total - self.amount_untaxed
+
+    @api.onchange('amount_untaxed')
+    def _onchange_amount_untaxed(self):
+        if self.amount_untaxed and not self.amount_total:
+            # 如果只輸入未稅金額，計算含稅金額
+            self.amount_total = round(self.amount_untaxed * 1.05)
             self.tax_amount = self.amount_total - self.amount_untaxed
 
     @api.constrains('amount_total', 'amount_untaxed', 'tax_amount')

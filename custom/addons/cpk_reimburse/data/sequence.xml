@@ -5,8 +5,8 @@
     <record id="seq_cpk_reimburse" model="ir.sequence">
         <field name="name">費用請款單號</field>
         <field name="code">cpk.reimburse</field>
-        <field name="prefix">RE</field>
-        <field name="suffix">%(year)s%(month)s</field>
+        <field name="prefix">RE%(year)s%(month)s</field>
+        <field name="suffix"></field>
         <field name="padding">4</field>
         <field name="number_next">1</field>
         <field name="number_increment">1</field>
