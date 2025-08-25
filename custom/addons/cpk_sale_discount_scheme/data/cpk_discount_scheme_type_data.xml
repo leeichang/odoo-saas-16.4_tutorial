@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- 折扣方案類型 -->
+        <record id="scheme_type_bundle_discount" model="cpk.discount.scheme.type">
+            <field name="name">搭售折扣</field>
+            <field name="code">bundle_discount</field>
+            <field name="description">主商品搭配其他商品的組合折扣方案</field>
+            <field name="sequence">10</field>
+            <field name="engine_class">cpk.discount.engine.bundle</field>
+        </record>
+
+        <record id="scheme_type_volume_discount" model="cpk.discount.scheme.type">
+            <field name="name">數量折扣</field>
+            <field name="code">volume_discount</field>
+            <field name="description">基於購買數量的階梯式折扣方案</field>
+            <field name="sequence">20</field>
+            <field name="engine_class">cpk.discount.engine.volume</field>
+        </record>
+
+        <record id="scheme_type_seasonal_discount" model="cpk.discount.scheme.type">
+            <field name="name">季節性折扣</field>
+            <field name="code">seasonal_discount</field>
+            <field name="description">基於時間週期的季節性折扣方案</field>
+            <field name="sequence">30</field>
+            <field name="engine_class">cpk.discount.engine.seasonal</field>
+        </record>
+
+        <record id="scheme_type_loyalty_discount" model="cpk.discount.scheme.type">
+            <field name="name">忠誠度折扣</field>
+            <field name="code">loyalty_discount</field>
+            <field name="description">基於客戶忠誠度的折扣方案</field>
+            <field name="sequence">40</field>
+            <field name="engine_class">cpk.discount.engine.loyalty</field>
+        </record>
+    </data>
+</odoo>

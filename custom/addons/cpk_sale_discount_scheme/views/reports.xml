@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- 報表分析視圖佔位符 -->
+    <record id="action_cpk_discount_analysis_report" model="ir.actions.act_window">
+        <field name="name">折扣效益分析</field>
+        <field name="res_model">sale.order.line</field>
+        <field name="view_mode">pivot,graph,tree</field>
+        <field name="domain">[('applied_discount_scheme_id', '!=', False)]</field>
+        <field name="context">{
+            'search_default_group_by_scheme': 1,
+            'group_by': ['applied_discount_scheme_id']
+        }</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                沒有折扣方案的使用記錄！
+            </p>
+            <p>
+                當訂單套用折扣方案後，這裡會顯示相關的分析資料。
+            </p>
+        </field>
+    </record>
+</odoo>

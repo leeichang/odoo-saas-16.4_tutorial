@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- 欄位類型訓練報表產生器 - Form View -->
+        <record id="view_field_training_report_wizard_form" model="ir.ui.view">
+            <field name="name">欄位類型訓練報表產生器</field>
+            <field name="model">cpk.field.training.report.wizard</field>
+            <field name="arch" type="xml">
+                <form string="報表產生器" class="o_form_view o_form_nosheet">
+                    <div class="o_form_sheet" style="max-width: none; width: 100%;">
+                        <div class="oe_title">
+                            <h1>
+                                <i class="fa fa-print text-primary"/> 欄位類型訓練報表產生器
+                            </h1>
+                        </div>
+                        
+                        <group>
+                            <!-- 篩選模式區塊 -->
+                            <group string="篩選模式">
+                                <field name="filter_mode" widget="radio"/>
+                            </group>
+                            
+                            <!-- 篩選條件區塊 -->
+                            <group string="篩選條件">
+                                <field name="name_filter" 
+                                       placeholder="輸入姓名關鍵字..."
+                                       attrs="{'invisible': [('filter_mode', 'not in', ['name', 'both'])], 'required': [('filter_mode', 'in', ['name', 'both'])]}"/>
+                                <field name="date_from" 
+                                       attrs="{'invisible': [('filter_mode', 'not in', ['date', 'both'])]}"/>
+                                <field name="date_to" 
+                                       attrs="{'invisible': [('filter_mode', 'not in', ['date', 'both'])]}"/>
+                            </group>
+                            
+                            <!-- 報表設定區塊 -->
+                            <group string="報表設定">
+                                <field name="report_format" widget="radio"/>
+                                <field name="record_count" readonly="1"/>
+                                <div colspan="2" attrs="{'invisible': [('record_count', '>', 0)]}">
+                                    <div class="alert alert-warning" role="alert">
+                                        <p><i class="fa fa-exclamation-triangle"/> 目前資料庫中沒有資料，無法產生報表。</p>
+                                        <button name="action_create_test_data" type="object" 
+                                                string="建立測試資料" class="btn btn-sm btn-primary"/>
+                                    </div>
+                                </div>
+                            </group>
+                        </group>
+
+                        <!-- 說明區塊 -->
+                        <notebook>
+                            <page string="使用說明">
+                                <div style="padding: 20px; width: 100%;">
+                                    <div class="alert alert-info" role="alert">
+                                        <h5><i class="fa fa-info-circle"/> 使用說明</h5>
+                                        <ul>
+                                            <li><strong>篩選模式：</strong>選擇報表資料的篩選方式
+                                                <ul>
+                                                    <li><span class="badge badge-secondary">顯示全部資料</span> - 不套用任何篩選條件</li>
+                                                    <li><span class="badge badge-primary">依姓名篩選</span> - 僅依姓名關鍵字篩選</li>
+                                                    <li><span class="badge badge-warning">依日期範圍篩選</span> - 僅依開始日期範圍篩選</li>
+                                                    <li><span class="badge badge-success">依姓名和日期篩選</span> - 同時套用姓名和日期條件</li>
+                                                </ul>
+                                            </li>
+                                            <li><strong>姓名過濾：</strong>輸入姓名關鍵字，支援部分符合搜尋（當篩選模式為「依姓名篩選」或「依姓名和日期篩選」時顯示）</li>
+                                            <li><strong>日期範圍：</strong>根據記錄的開始日期進行過濾（當篩選模式為「依日期範圍篩選」或「依姓名和日期篩選」時顯示）</li>
+                                            <li><strong>報表格式：</strong>
+                                                <ul>
+                                                    <li><span class="badge badge-primary">PDF 標準報表</span> - 完整的PDF格式報表</li>
+                                                    <li><span class="badge badge-info">HTML 網頁預覽</span> - 在瀏覽器中預覽報表</li>
+                                                    <li><span class="badge badge-success">PDF 詳細報表</span> - 包含所有欄位的詳細報表</li>
+                                                </ul>
+                                            </li>
+                                            <li><strong>符合條件記錄數：</strong>顯示當前條件下會產生報表的記錄數量</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </page>
+                            
+                            <page string="報表格式說明">
+                                <div style="padding: 20px; width: 100%;">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <div class="card border-primary">
+                                                <div class="card-header bg-primary text-white">
+                                                    <i class="fa fa-file-pdf-o"/> PDF 標準報表
+                                                </div>
+                                                <div class="card-body">
+                                                    <ul class="list-unstyled">
+                                                        <li>✓ 基本資訊展示</li>
+                                                        <li>✓ 數值統計表格</li>
+                                                        <li>✓ 明細資料列表</li>
+                                                        <li>✓ 布林值圖示化</li>
+                                                        <li>✓ 專業PDF排版</li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="col-md-4">
+                                            <div class="card border-info">
+                                                <div class="card-header bg-info text-white">
+                                                    <i class="fa fa-html5"/> HTML 網頁預覽
+                                                </div>
+                                                <div class="card-body">
+                                                    <ul class="list-unstyled">
+                                                        <li>✓ 即時瀏覽器預覽</li>
+                                                        <li>✓ 響應式設計</li>
+                                                        <li>✓ 快速檢視內容</li>
+                                                        <li>✓ 無需下載</li>
+                                                        <li>✓ 分享友善</li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="col-md-4">
+                                            <div class="card border-success">
+                                                <div class="card-header bg-success text-white">
+                                                    <i class="fa fa-file-text-o"/> PDF 詳細報表
+                                                </div>
+                                                <div class="card-body">
+                                                    <ul class="list-unstyled">
+                                                        <li>✓ 完整欄位展示</li>
+                                                        <li>✓ 所有欄位類型</li>
+                                                        <li>✓ 關係資料詳情</li>
+                                                        <li>✓ HTML內容展示</li>
+                                                        <li>✓ 教學參考用</li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </page>
+                        </notebook>
+                    </div>
+                    
+                    <footer>
+                        <button name="action_generate_report" 
+                                type="object" 
+                                string="產生報表" 
+                                class="btn-primary"
+                                icon="fa-print"/>
+                        <button name="action_preview_data" 
+                                type="object" 
+                                string="預覽資料" 
+                                class="btn-secondary"
+                                icon="fa-eye"/>
+                        <button string="取消" class="btn-secondary" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <!-- 報表產生器動作定義 -->
+        <record id="action_field_training_report_wizard" model="ir.actions.act_window">
+            <field name="name">報表產生器</field>
+            <field name="res_model">cpk.field.training.report.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="context">{'dialog_size': 'large'}</field>
+        </record>
+
+    </data>
+</odoo>

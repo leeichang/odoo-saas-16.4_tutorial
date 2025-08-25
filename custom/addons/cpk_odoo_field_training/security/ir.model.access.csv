@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_cpk_field_training_user,cpk.field.training.user,model_cpk_field_training,base.group_user,1,1,1,1
+access_cpk_field_training_line_user,cpk.field.training.line.user,model_cpk_field_training_line,base.group_user,1,1,1,1
+access_cpk_field_attribute_demo_user,cpk.field.attribute.demo.user,model_cpk_field_attribute_demo,base.group_user,1,1,1,1
+access_cpk_field_training_report_wizard_user,cpk.field.training.report.wizard.user,model_cpk_field_training_report_wizard,base.group_user,1,1,1,1

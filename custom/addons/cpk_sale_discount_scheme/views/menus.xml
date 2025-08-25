@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- 主選單 -->
+    <menuitem id="menu_cpk_sale_discount_root" 
+              name="折扣方案管理" 
+              sequence="50"
+              web_icon="cpk_sale_discount_scheme,static/description/icon.png"/>
+    
+    <!-- 折扣方案管理 -->
+    <menuitem id="menu_cpk_discount_schemes" 
+              name="折扣方案" 
+              parent="menu_cpk_sale_discount_root"
+              sequence="10"/>
+    
+    <!-- 折扣方案清單 -->
+    <menuitem id="menu_cpk_discount_scheme_list" 
+              name="折扣方案清單" 
+              parent="menu_cpk_discount_schemes"
+              action="action_cpk_discount_scheme" 
+              sequence="10"/>
+    
+    <!-- 搭售折扣規則 -->
+    <menuitem id="menu_cpk_bundle_discount_rules" 
+              name="搭售折扣規則" 
+              parent="menu_cpk_discount_schemes"
+              action="action_cpk_bundle_discount_rule" 
+              sequence="20"/>
+    
+    <!-- 價格檔整合 -->
+    <menuitem id="menu_cpk_pricelist_integration" 
+              name="價格檔整合" 
+              parent="menu_cpk_sale_discount_root"
+              sequence="20"/>
+    
+    <!-- 批次套用價格檔 -->
+    <menuitem id="menu_cpk_pricelist_apply_wizard" 
+              name="批次套用價格檔" 
+              parent="menu_cpk_pricelist_integration"
+              action="action_cpk_pricelist_apply_wizard" 
+              sequence="10"/>
+    
+    <!-- 報表分析 -->
+    <menuitem id="menu_cpk_discount_reports" 
+              name="報表分析" 
+              parent="menu_cpk_sale_discount_root"
+              sequence="30"/>
+    
+    <!-- 折扣效益分析 -->
+    <menuitem id="menu_cpk_discount_analysis" 
+              name="折扣效益分析" 
+              parent="menu_cpk_discount_reports"
+              action="action_cpk_discount_analysis_report" 
+              sequence="10"/>
+    
+    <!-- 設定 -->
+    <menuitem id="menu_cpk_discount_config" 
+              name="設定" 
+              parent="menu_cpk_sale_discount_root"
+              sequence="90"/>
+    
+    <!-- 折扣方案類型 -->
+    <menuitem id="menu_cpk_discount_scheme_types" 
+              name="折扣方案類型" 
+              parent="menu_cpk_discount_config"
+              action="action_cpk_discount_scheme_type" 
+              sequence="10"
+              groups="base.group_system"/>
+</odoo>

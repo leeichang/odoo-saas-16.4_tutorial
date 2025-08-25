@@ -28,6 +28,7 @@
             <form string="費用請款單">
                 <header>
                     <button name="%(action_cpk_reimburse_print_wizard)d" string="列印" type="action" class="btn-primary"/>
+                    <button name="%(action_excel_import_wizard)d" string="Excel匯入" type="action" class="btn-secondary" attrs="{'invisible': [('state', 'not in', ['draft'])]}"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,submitted,approved,paid,closed"/>
                 </header>
                 <sheet>

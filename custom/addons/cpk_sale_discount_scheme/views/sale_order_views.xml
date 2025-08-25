@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- 擴展銷售訂單 Form View -->
+    <record id="view_sale_order_form_inherit" model="ir.ui.view">
+        <field name="name">sale.order.form.cpk.discount.scheme</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <!-- 在 header 加入折扣計算按鈕 -->
+            <xpath expr="//header" position="inside">
+                <button name="action_recalculate_discounts" string="重新計算折扣" 
+                        type="object" class="btn-secondary"
+                        attrs="{'invisible': [('state', 'not in', ['draft', 'sent'])]}"/>
+                <button name="action_reset_discounts" string="重置折扣" 
+                        type="object" class="btn-secondary"
+                        attrs="{'invisible': [('state', 'not in', ['draft', 'sent'])]}"/>
+            </xpath>
+            
+            <!-- 在訂單明細後加入折扣資訊 -->
+            <xpath expr="//page[@name='order_lines']" position="after">
+                <page string="折扣資訊" name="discount_info">
+                    <group string="套用的折扣方案">
+                        <field name="applied_discount_schemes" readonly="1"/>
+                    </group>
+                    
+                    <group string="折扣計算記錄">
+                        <field name="discount_calculation_log" readonly="1" widget="text"/>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- 擴展銷售訂單明細 Tree View -->
+    <record id="view_sale_order_line_tree_inherit" model="ir.ui.view">
+        <field name="name">sale.order.line.tree.cpk.discount.scheme</field>
+        <field name="model">sale.order.line</field>
+        <field name="inherit_id" ref="sale.view_order_line_tree"/>
+        <field name="arch" type="xml">
+            <!-- 在折扣欄位後加入折扣方案資訊 -->
+            <xpath expr="//field[@name='discount']" position="after">
+                <field name="discount_scheme_display" optional="hide"/>
+                <field name="bundle_type_display" optional="hide"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

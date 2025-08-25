@@ -36,6 +36,7 @@
         'views/tax_code_views.xml',
         'views/payment_method_views.xml',
         'views/reimburse_print_wizard_views.xml',
+        'wizard/excel_import_wizard_views.xml',
         'reports/reimburse_report_template.xml',
         'views/reimburse_views.xml',
         'views/reimburse_report_views.xml',

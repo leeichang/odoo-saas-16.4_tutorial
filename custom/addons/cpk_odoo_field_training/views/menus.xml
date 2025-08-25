@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Root Menu -->
+        <menuitem id="menu_field_training_root"
+                  name="欄位類型訓練"
+                  web_icon="cpk_odoo_field_training,static/description/icon.png"
+                  sequence="100"/>
+
+        <!-- Main Menu -->
+        <menuitem id="menu_field_training_main"
+                  name="欄位類型演示"
+                  parent="menu_field_training_root"
+                  action="action_field_training"
+                  sequence="10"/>
+
+        <!-- Field Attributes Menu -->
+        <menuitem id="menu_field_attributes_demo"
+                  name="欄位屬性展示"
+                  parent="menu_field_training_root"
+                  action="action_field_attribute_demo"
+                  sequence="20"/>
+
+        <!-- Reports and Analysis Menu -->
+        <menuitem id="menu_field_training_reports"
+                  name="報表與分析"
+                  parent="menu_field_training_root"
+                  sequence="30"/>
+
+        <!-- Analysis Submenu -->
+        <menuitem id="menu_field_training_analysis"
+                  name="資料分析"
+                  parent="menu_field_training_reports"
+                  action="action_field_training_analysis"
+                  sequence="10"/>
+
+        <!-- Report Generator Submenu -->
+        <menuitem id="menu_field_training_report_generator"
+                  name="報表產生器"
+                  parent="menu_field_training_reports"
+                  action="action_field_training_report_wizard"
+                  sequence="20"/>
+
+        <!-- Configuration Menu -->
+        <menuitem id="menu_field_training_config"
+                  name="設定"
+                  parent="menu_field_training_root"
+                  sequence="90"/>
+
+        <!-- Field Types Documentation Menu -->
+        <menuitem id="menu_field_training_doc"
+                  name="欄位類型說明"
+                  parent="menu_field_training_config"
+                  sequence="10"/>
+
+    </data>
+</odoo>

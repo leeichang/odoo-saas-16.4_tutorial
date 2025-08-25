@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- 折扣方案管理群組 -->
+        <record id="group_cpk_discount_manager" model="res.groups">
+            <field name="name">折扣方案管理員</field>
+            <field name="category_id" ref="base.module_category_sales"/>
+            <field name="comment">可以建立、修改和管理所有折扣方案</field>
+        </record>
+
+        <!-- 折扣方案使用者群組 -->
+        <record id="group_cpk_discount_user" model="res.groups">
+            <field name="name">折扣方案使用者</field>
+            <field name="category_id" ref="base.module_category_sales"/>
+            <field name="implied_ids" eval="[(4, ref('sales_team.group_sale_salesman'))]"/>
+            <field name="comment">可以查看和使用折扣方案，但不能修改</field>
+        </record>
+    </data>
+</odoo>

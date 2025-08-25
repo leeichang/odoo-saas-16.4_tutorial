@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Excel 匯入精靈表單視圖 -->
+    <record id="view_excel_import_wizard_form" model="ir.ui.view">
+        <field name="name">cpk.reimburse.excel.import.wizard.form</field>
+        <field name="model">cpk.reimburse.excel.import.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Excel 匯入憑證與請款明細">
+                <div class="alert alert-info" role="alert" attrs="{'invisible': [('import_log', '!=', False)]}">
+                    <p><strong>Excel 匯入功能說明：</strong></p>
+                    <ul>
+                        <li>支援一次匯入憑證資料和請款明細</li>
+                        <li>Excel 檔案需包含「憑證資料」和「請款明細」兩個工作表</li>
+                        <li>建議先下載範例檔案了解正確格式</li>
+                        <li>憑證資料和請款明細會根據行號自動關聯</li>
+                    </ul>
+                </div>
+
+                <!-- 成功訊息 -->
+                <div class="alert alert-success" role="alert" attrs="{'invisible': [('import_log', '=', False)]}">
+                    <p><strong><i class="fa fa-check-circle"/> 匯入成功！</strong></p>
+                    <p>憑證數量：<span t-esc="voucher_count"/> 筆</p>
+                    <p>請款明細：<span t-esc="expense_line_count"/> 筆</p>
+                </div>
+
+                <group attrs="{'invisible': [('import_log', '!=', False)]}">
+                    <group name="basic_info">
+                        <field name="reimburse_id" readonly="1"/>
+                        <field name="import_mode" widget="radio"/>
+                    </group>
+                    <group name="file_info">
+                        <field name="import_file" filename="import_filename"/>
+                        <field name="import_filename" invisible="1"/>
+                    </group>
+                </group>
+
+                <!-- 範例檔案下載區 -->
+                <group string="範例檔案下載" attrs="{'invisible': [('import_log', '!=', False)]}">
+                    <div class="alert alert-warning" role="alert">
+                        <p><i class="fa fa-download"/> 建議先下載範例檔案，了解正確的匯入格式</p>
+                    </div>
+                    
+                    <div class="row" attrs="{'invisible': [('template_file', '=', False)]}">
+                        <div class="col-12">
+                            <field name="template_file" filename="template_filename" readonly="1"/>
+                            <field name="template_filename" invisible="1"/>
+                        </div>
+                    </div>
+                </group>
+
+                <!-- 匯入結果 -->
+                <group string="匯入結果" attrs="{'invisible': [('import_log', '=', False)]}">
+                    <field name="import_log" nolabel="1" readonly="1" 
+                           widget="text" style="height: 200px;"/>
+                    <field name="voucher_count" invisible="1"/>
+                    <field name="expense_line_count" invisible="1"/>
+                </group>
+
+                <footer>
+                    <!-- 匯入前的按鈕 -->
+                    <div attrs="{'invisible': [('import_log', '!=', False)]}">
+                        <button name="action_download_template" string="下載範例檔案" 
+                                type="object" class="btn-info"/>
+                        <button name="action_import_excel" string="開始匯入" 
+                                type="object" class="btn-primary"
+                                attrs="{'invisible': [('import_file', '=', False)]}"/>
+                        <button string="取消" class="btn-secondary" special="cancel"/>
+                    </div>
+                    
+                    <!-- 匯入後的按鈕 -->
+                    <div attrs="{'invisible': [('import_log', '=', False)]}">
+                        <button name="action_close" string="完成" 
+                                type="object" class="btn-primary"/>
+                    </div>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Excel 匯入動作 -->
+    <record id="action_excel_import_wizard" model="ir.actions.act_window">
+        <field name="name">Excel 匯入憑證與明細</field>
+        <field name="res_model">cpk.reimburse.excel.import.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="binding_model_id" ref="model_cpk_reimburse"/>
+        <field name="binding_view_types">form</field>
+    </record>
+</odoo>

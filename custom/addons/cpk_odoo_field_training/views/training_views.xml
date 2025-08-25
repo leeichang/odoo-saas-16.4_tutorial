@@ -1,0 +1,757 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Tree View - 欄位類型展示列表 -->
+        <record id="view_field_training_tree" model="ir.ui.view">
+            <field name="name">cpk.field.training.tree</field>
+            <field name="model">cpk.field.training</field>
+            <field name="arch" type="xml">
+                <tree string="Odoo 欄位類型訓練">
+                    <header>
+                        <button name="action_open_form_dialog" 
+                                string="表單新增" 
+                                type="object" 
+                                class="btn-primary" 
+                                icon="fa-plus"/>
+                    </header>
+                    <!-- 基本欄位 Tree View 展示 -->
+                    <field name="name"/>
+                    <field name="code"/>
+                    <field name="quantity"/>
+                    <field name="price" widget="float" digits="[10,2]"/>
+                    <field name="is_active" widget="boolean_toggle"/>
+                    <field name="start_date"/>
+                    <field name="status" widget="badge" 
+                           decoration-success="status == 'done'"
+                           decoration-info="status == 'confirmed'"
+                           decoration-warning="status == 'draft'"
+                           decoration-danger="status == 'cancelled'"/>
+                    
+                    <!-- 關係欄位 Tree View 展示 -->
+                    <field name="partner_id"/>
+                    <field name="user_id" widget="many2one_avatar_user"/>
+                    
+                    <!-- 貨幣欄位 Tree View 展示 -->
+                    <field name="currency_id" invisible="1"/>
+                    <field name="amount_total" widget="monetary"/>
+                    
+                    <!-- 計算欄位 Tree View 展示 -->
+                    <field name="total_lines"/>
+                    <field name="full_name"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Form View - 完整的欄位類型展示表單 -->
+        <record id="view_field_training_form" model="ir.ui.view">
+            <field name="name">cpk.field.training.form</field>
+            <field name="model">cpk.field.training</field>
+            <field name="arch" type="xml">
+                <form string="Odoo 欄位類型訓練">
+                    <header>
+                        <field name="status" widget="statusbar"/>
+                    </header>
+                    
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <!-- 統計按鈕展示 -->
+                            <button name="toggle_active" type="object" 
+                                    class="oe_stat_button" icon="fa-archive">
+                                <field name="is_active" widget="boolean_button"/>
+                            </button>
+                            
+                            <button class="oe_stat_button" icon="fa-list-ol">
+                                <field name="total_lines" string="明細行" widget="statinfo"/>
+                            </button>
+                        </div>
+
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" placeholder="輸入姓名..."/>
+                            </h1>
+                            <h2>
+                                <field name="full_name" readonly="1" class="text-muted"/>
+                            </h2>
+                        </div>
+
+                        <group>
+                            <group string="基本資料欄位 (Basic Fields)">
+                                <!-- Char 欄位展示 -->
+                                <field name="code" placeholder="輸入代碼"/>
+                                
+                                <!-- Integer 欄位展示 -->
+                                <field name="age" widget="integer"/>
+                                <field name="quantity"/>
+                                
+                                <!-- Float 欄位展示 -->
+                                <field name="weight"/>
+                                <field name="percentage" widget="percentage"/>
+                                
+                                <!-- Boolean 欄位展示 -->
+                                <field name="is_completed" widget="boolean_toggle"/>
+                                
+                                <!-- Selection 欄位展示 -->
+                                <field name="priority" widget="priority"/>
+                                <field name="gender" widget="radio" options="{'horizontal': true}"/>
+                            </group>
+                            
+                            <group string="日期時間欄位 (Date/Datetime Fields)">
+                                <!-- Date 欄位展示 -->
+                                <field name="birth_date"/>
+                                <field name="start_date"/>
+                                
+                                <!-- Datetime 欄位展示 -->
+                                <field name="order_datetime"/>
+                                <field name="last_update" readonly="1"/>
+                            </group>
+                        </group>
+
+                        <group>
+                            <group string="關係欄位 (Relational Fields)">
+                                <!-- Many2one 欄位展示 -->
+                                <field name="partner_id" 
+                                       options="{'no_create': False, 'no_open': False}"
+                                       context="{'default_is_company': True}"/>
+                                <field name="user_id" widget="many2one_avatar"/>
+                                <field name="company_id"/>
+                                
+                                <!-- Related 欄位展示 -->
+                                <field name="partner_email" readonly="1" widget="email"/>
+                                <field name="partner_phone" readonly="1" widget="phone"/>
+                            </group>
+                            
+                            <group string="貨幣欄位 (Monetary Fields)">
+                                <field name="currency_id"/>
+                                <!-- Monetary 欄位展示 -->
+                                <field name="unit_price" widget="monetary"/>
+                                <field name="amount_total" widget="monetary"/>
+                            </group>
+                        </group>
+
+                        <group string="進階欄位 (Advanced Fields)">
+                            <!-- Reference 欄位展示 -->
+                            <field name="reference_field"/>
+                        </group>
+
+                        <notebook>
+                            <page string="文字內容欄位 (Text Fields)">
+                                <group>
+                                    <!-- Text 欄位展示 -->
+                                    <field name="description" nolabel="1" placeholder="輸入詳細描述..."/>
+                                    
+                                    <!-- Html 欄位展示 -->
+                                    <separator string="HTML 內容編輯器"/>
+                                    <field name="html_content" nolabel="1" widget="html"/>
+                                    
+                                    <separator string="郵件範本編輯器"/>
+                                    <field name="email_template" nolabel="1" widget="html"/>
+                                </group>
+                            </page>
+
+                            <page string="檔案與圖片欄位 (Binary/Image Fields)">
+                                <group>
+                                    <group string="圖片欄位展示">
+                                        <!-- Image 欄位展示 -->
+                                        <field name="image" widget="image" class="oe_avatar"/>
+                                        <field name="avatar" widget="image"/>
+                                    </group>
+                                    
+                                    <group string="二進位檔案展示">
+                                        <!-- Binary 欄位展示 -->
+                                        <field name="attachment" filename="attachment_name"/>
+                                        <field name="document" filename="document_name"/>
+                                    </group>
+                                </group>
+                            </page>
+
+                            <page string="多對多關係欄位 (Many2many Fields)">
+                                <group>
+                                    <!-- Many2many 欄位展示 -->
+                                    <field name="tag_ids" widget="many2many_tags" 
+                                           placeholder="選擇標籤..." 
+                                           options="{'color_field': 'color', 'no_create_edit': True}"/>
+                                    
+                                    <separator string="專案清單"/>
+                                    <field name="project_ids" nolabel="1">
+                                        <tree>
+                                            <field name="name"/>
+                                            <field name="partner_id"/>
+                                            <field name="date_start"/>
+                                            <field name="stage_id"/>
+                                        </tree>
+                                    </field>
+                                </group>
+                            </page>
+
+                            <page string="一對多明細欄位 (One2many Fields)">
+                                <!-- One2many 欄位展示 -->
+                                <field name="line_ids" nolabel="1">
+                                    <tree editable="bottom">
+                                        <field name="sequence" widget="handle"/>
+                                        <field name="name"/>
+                                        <field name="description"/>
+                                        <field name="quantity"/>
+                                        <field name="price" widget="monetary"/>
+                                        <field name="subtotal" sum="總計"/>
+                                    </tree>
+                                    
+                                    <form string="明細項目">
+                                        <group>
+                                            <field name="name"/>
+                                            <field name="sequence"/>
+                                            <field name="quantity"/>
+                                            <field name="price"/>
+                                            <field name="subtotal" readonly="1"/>
+                                        </group>
+                                        <field name="description" placeholder="項目說明..."/>
+                                    </form>
+                                </field>
+                            </page>
+
+                            <page string="JSON 與屬性欄位 (JSON/Properties Fields)">
+                                <group>
+                                    <separator string="JSON 資料欄位"/>
+                                    <field name="json_data" nolabel="1" widget="ace" 
+                                           options="{'mode': 'json'}"/>
+                                    
+                                    <separator string="API 設定"/>
+                                    <field name="api_config" nolabel="1"/>
+                                    
+                                    <!-- 動態屬性欄位 - 暫時移除以避免錯誤 -->
+                                    <!-- <separator string="動態屬性欄位"/>
+                                    <field name="properties" nolabel="1"/> -->
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <!-- Dialog Form View - 對話框專用的簡化表單 -->
+        <record id="view_field_training_dialog_form" model="ir.ui.view">
+            <field name="name">cpk.field.training.dialog.form</field>
+            <field name="model">cpk.field.training</field>
+            <field name="arch" type="xml">
+                <form string="新增欄位類型訓練">
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" placeholder="請輸入姓名..." required="1"/>
+                            </h1>
+                        </div>
+
+                        <group>
+                            <group string="基本資料">
+                                <field name="code" placeholder="輸入代碼"/>
+                                <field name="status"/>
+                                <field name="is_active" widget="boolean_toggle"/>
+                                <field name="priority" widget="priority"/>
+                            </group>
+                            
+                            <group string="數值與日期">
+                                <field name="quantity"/>
+                                <field name="price" widget="monetary"/>
+                                <field name="currency_id" invisible="1"/>
+                                <field name="start_date"/>
+                                <field name="birth_date"/>
+                                <field name="order_datetime" string="訂單時間 (Datetime)"/>
+                                <field name="last_update" string="最後更新 (Datetime)" readonly="1"/>
+                            </group>
+                        </group>
+
+                        <group>
+                            <group string="關係欄位">
+                                <field name="partner_id" options="{'no_create': False}"/>
+                                <field name="user_id"/>
+                                <field name="company_id"/>
+                                <field name="reference_field" string="動態參考 (Reference)"/>
+                            </group>
+                            
+                            <group string="其他設定">
+                                <field name="age"/>
+                                <field name="gender" widget="radio" options="{'horizontal': true}"/>
+                                <field name="is_completed"/>
+                            </group>
+                        </group>
+
+                        <!-- 多對多關係欄位展示 -->
+                        <separator string="多對多關係欄位 (Many2many Fields)"/>
+                        <group>
+                            <field name="tag_ids" widget="many2many_tags" 
+                                   string="標籤 (Many2many)" 
+                                   placeholder="選擇標籤..."
+                                   options="{'color_field': 'color', 'no_create_edit': True}"/>
+                            <field name="project_ids" 
+                                   string="專案 (Many2many)"
+                                   widget="many2many_tags"/>
+                        </group>
+
+                        <!-- 檔案上傳欄位展示 -->
+                        <separator string="檔案上傳欄位 (Binary/Image Fields)"/>
+                        <group>
+                            <group string="圖片上傳">
+                                <field name="image" widget="image" string="照片 (Image)"/>
+                                <field name="avatar" widget="image" string="頭像 (Image)"/>
+                            </group>
+                            <group string="檔案上傳">
+                                <field name="attachment" string="附件 (Binary)" filename="attachment_name"/>
+                                <field name="document" string="文件 (Binary)" filename="document_name"/>
+                            </group>
+                        </group>
+
+                        <!-- HTML 內容欄位展示 -->
+                        <separator string="HTML 內容欄位 (Html Field)"/>
+                        <field name="html_content" nolabel="1" widget="html" string="HTML 內容 (Html)"/>
+
+                        <!-- JSON 資料欄位展示 -->
+                        <separator string="JSON 資料欄位 (Json Field)"/>
+                        <group>
+                            <field name="json_data" string="JSON 資料 (Json)" widget="ace" options="{'mode': 'json'}"/>
+                            <field name="api_config" string="API 設定 (Json)"/>
+                        </group>
+
+                        <!-- 屬性欄位展示 - 暫時移除以避免錯誤 -->
+                        <!-- <separator string="屬性欄位 (Properties Field)"/>
+                        <field name="properties" nolabel="1" string="屬性 (Properties)"/> -->
+
+                        <!-- 一對多關聯欄位展示 -->
+                        <separator string="一對多關聯欄位 (One2many Field)"/>
+                        <field name="line_ids" nolabel="1" string="明細行 (One2many)">
+                            <tree editable="bottom">
+                                <field name="sequence" widget="handle"/>
+                                <field name="name"/>
+                                <field name="quantity"/>
+                                <field name="price"/>
+                                <field name="subtotal"/>
+                            </tree>
+                        </field>
+
+                        <!-- 說明內容 -->
+                        <separator string="說明內容 (Text Field)"/>
+                        <field name="description" nolabel="1" placeholder="輸入詳細描述..."/>
+
+                        <footer>
+                            <button string="建立" name="create" type="object" class="btn-primary"/>
+                            <button string="建立並繼續" name="create" type="object" class="btn-secondary" close="0"/>
+                            <button string="取消" class="btn-default" special="cancel"/>
+                        </footer>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Search View - 搜尋過濾器 -->
+        <record id="view_field_training_search" model="ir.ui.view">
+            <field name="name">cpk.field.training.search</field>
+            <field name="model">cpk.field.training</field>
+            <field name="arch" type="xml">
+                <search string="欄位類型訓練搜尋">
+                    <field name="name" string="姓名" filter_domain="[('name','ilike',self)]"/>
+                    <field name="code" string="代碼"/>
+                    <field name="partner_id" string="聯絡人"/>
+                    <field name="user_id" string="負責人"/>
+                    
+                    <filter string="啟用" name="active" domain="[('is_active','=',True)]"/>
+                    <filter string="已完成" name="completed" domain="[('is_completed','=',True)]"/>
+                    
+                    <separator/>
+                    <filter string="草稿" name="draft" domain="[('status','=','draft')]"/>
+                    <filter string="確認" name="confirmed" domain="[('status','=','confirmed')]"/>
+                    <filter string="完成" name="done" domain="[('status','=','done')]"/>
+                    
+                    <separator/>
+                    <filter string="本月建立" name="this_month" 
+                            domain="[('create_date','&gt;=',context_today().replace(day=1))]"/>
+                    <filter string="今日建立" name="today" 
+                            domain="[('create_date','&gt;=',context_today())]"/>
+                    
+                    <group expand="0" string="群組">
+                        <filter string="狀態" name="group_status" context="{'group_by': 'status'}"/>
+                        <filter string="負責人" name="group_user" context="{'group_by': 'user_id'}"/>
+                        <filter string="聯絡人" name="group_partner" context="{'group_by': 'partner_id'}"/>
+                        <filter string="建立日期" name="group_create_date" context="{'group_by': 'create_date:month'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- Action - 主要動作定義 -->
+        <record id="action_field_training" model="ir.actions.act_window">
+            <field name="name">Odoo 欄位類型訓練</field>
+            <field name="res_model">cpk.field.training</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_field_training_search"/>
+            <field name="context">{
+                'search_default_active': 1
+            }</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    建立第一筆欄位類型訓練資料！
+                </p>
+                <p>
+                    這個模組展示了 Odoo 16 所有支援的欄位類型，包括：<br/>
+                    • 基本欄位：Char, Text, Integer, Float, Boolean, Date, Datetime, Selection<br/>
+                    • 關係欄位：Many2one, One2many, Many2many<br/>
+                    • 進階欄位：Monetary, Html, Related, Reference, Json, Properties<br/>
+                    <br/>
+                    每種欄位類型都展示了不同的 widget 使用方式和視圖呈現效果。
+                </p>
+            </field>
+        </record>
+
+        <!-- ========================================= -->
+        <!-- 欄位屬性展示視圖 (Field Attribute Views)  -->
+        <!-- ========================================= -->
+
+        <!-- Tree View - 欄位屬性列表 -->
+        <record id="view_field_attribute_tree" model="ir.ui.view">
+            <field name="name">cpk.field.attribute.demo.tree</field>
+            <field name="model">cpk.field.attribute.demo</field>
+            <field name="arch" type="xml">
+                <tree string="Odoo 欄位屬性展示">
+                    <field name="sequence" widget="handle"/>
+                    <field name="name"/>
+                    <field name="required_field"/>
+                    <field name="readonly_field"/>
+                    <field name="default_fixed"/>
+                    <field name="status" widget="badge"/>
+                    <field name="partner_id"/>
+                    <field name="total_amount"/>
+                    <field name="condition_field" widget="boolean_toggle"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Form View - 欄位屬性詳細表單 -->
+        <record id="view_field_attribute_form" model="ir.ui.view">
+            <field name="name">cpk.field.attribute.demo.form</field>
+            <field name="model">cpk.field.attribute.demo</field>
+            <field name="arch" type="xml">
+                <form string="Odoo 欄位屬性展示">
+                    <header>
+                        <field name="status" widget="statusbar"/>
+                    </header>
+                    
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" placeholder="請輸入名稱..."/>
+                            </h1>
+                        </div>
+
+                        <!-- 基本屬性展示區 -->
+                        <group string="基本屬性展示 (Basic Attributes)">
+                            <group>
+                                <field name="sequence"/>
+                                <field name="required_field"/>
+                                <field name="readonly_field"/>
+                                <field name="help_demo"/>
+                                <field name="indexed_code"/>
+                            </group>
+                            <group>
+                                <field name="default_fixed"/>
+                                <field name="default_function"/>
+                                <field name="current_user"/>
+                                <field name="short_code"/>
+                                <field name="tracked_field"/>
+                            </group>
+                        </group>
+
+                        <!-- 權限相關屬性 -->
+                        <group string="權限屬性展示 (Permission Attributes)">
+                            <field name="admin_only_field"/>
+                            <field name="user_field"/>
+                        </group>
+
+                        <!-- 計算欄位屬性展示 -->
+                        <group string="計算欄位屬性展示 (Computed Field Attributes)">
+                            <group>
+                                <field name="quantity"/>
+                                <field name="unit_price"/>
+                                <field name="precise_amount"/>
+                            </group>
+                            <group>
+                                <field name="total_amount" readonly="1"/>
+                                <field name="stored_total" readonly="1"/>
+                                <field name="editable_total"/>
+                            </group>
+                        </group>
+
+                        <!-- 關係欄位屬性展示 -->
+                        <group string="關係欄位屬性展示 (Relational Field Attributes)">
+                            <group>
+                                <field name="partner_id"/>
+                                <field name="partner_email"/>
+                                <field name="partner_phone"/>
+                            </group>
+                            <group>
+                                <field name="company_partner"/>
+                                <field name="new_partner"/>
+                                <field name="category_id"/>
+                            </group>
+                        </group>
+
+                        <!-- 特殊屬性展示 -->
+                        <group string="特殊屬性展示 (Special Attributes)">
+                            <group>
+                                <field name="translatable_name"/>
+                                <field name="tracked_field"/>
+                            </group>
+                            <group>
+                                <field name="precise_amount"/>
+                            </group>
+                        </group>
+
+                        <!-- 動態屬性展示 -->
+                        <group string="動態屬性展示 (Dynamic Attributes via attrs)">
+                            <field name="condition_field" widget="boolean_toggle"/>
+                            <field name="dynamic_required" 
+                                   attrs="{'required': [('condition_field', '=', True)]}"/>
+                            <field name="dynamic_readonly" 
+                                   attrs="{'readonly': [('condition_field', '=', True)]}"/>
+                            <field name="dynamic_invisible" 
+                                   attrs="{'invisible': [('condition_field', '=', True)]}"/>
+                        </group>
+
+                        <!-- 複製屬性展示 -->
+                        <group string="複製屬性展示 (Copy Attributes)">
+                            <field name="copy_field"/>
+                            <field name="no_copy_field"/>
+                        </group>
+                    </sheet>
+                    
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <!-- Search View - 搜尋過濾器 -->
+        <record id="view_field_attribute_search" model="ir.ui.view">
+            <field name="name">cpk.field.attribute.demo.search</field>
+            <field name="model">cpk.field.attribute.demo</field>
+            <field name="arch" type="xml">
+                <search string="欄位屬性搜尋">
+                    <field name="name"/>
+                    <field name="required_field"/>
+                    <field name="partner_id"/>
+                    <field name="status"/>
+                    
+                    <filter string="草稿狀態" name="draft" domain="[('status','=','draft')]"/>
+                    <filter string="進行中" name="progress" domain="[('status','=','progress')]"/>
+                    <filter string="已完成" name="done" domain="[('status','=','done')]"/>
+                    <filter string="有客戶" name="has_partner" domain="[('partner_id','!=',False)]"/>
+                    
+                    <group expand="0" string="群組">
+                        <filter string="狀態" name="group_status" context="{'group_by': 'status'}"/>
+                        <filter string="客戶" name="group_partner" context="{'group_by': 'partner_id'}"/>
+                        <filter string="使用者" name="group_user" context="{'group_by': 'current_user'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- Action - 欄位屬性展示動作 -->
+        <record id="action_field_attribute_demo" model="ir.actions.act_window">
+            <field name="name">欄位屬性展示</field>
+            <field name="res_model">cpk.field.attribute.demo</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_field_attribute_search"/>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    建立第一筆欄位屬性展示資料！
+                </p>
+                <p>
+                    這個功能展示了 Odoo 欄位的所有屬性使用方式，包括：<br/>
+                    <strong>基本屬性：</strong>string, required, readonly, default, help, index, copy, groups<br/>
+                    <strong>計算欄位：</strong>compute, store, inverse, depends<br/>
+                    <strong>關係欄位：</strong>related, domain, context, ondelete<br/>
+                    <strong>特殊屬性：</strong>digits, selection, translate, size, tracking<br/>
+                    <strong>動態屬性：</strong>使用 attrs 實現條件式顯示/隱藏<br/>
+                    <br/>
+                    每個欄位都有詳細的說明和實際範例，是學習 Odoo 欄位屬性的最佳教材！
+                </p>
+            </field>
+        </record>
+
+        <!-- ========================================= -->
+        <!-- 報表分析視圖 (Report Analysis Views)      -->
+        <!-- ========================================= -->
+
+        <!-- Pivot View - 樞紐分析報表 -->
+        <record id="view_field_training_pivot" model="ir.ui.view">
+            <field name="name">cpk.field.training.pivot</field>
+            <field name="model">cpk.field.training</field>
+            <field name="arch" type="xml">
+                <pivot string="欄位類型訓練樞紐分析" sample="1">
+                    <!-- 列 (Rows) - 主要分組維度 -->
+                    <field name="status" type="row"/>
+                    <field name="user_id" type="row"/>
+                    
+                    <!-- 欄 (Columns) - 次要分組維度 -->
+                    <field name="start_date" type="col" interval="month"/>
+                    
+                    <!-- 測量值 (Measures) - 數值統計 -->
+                    <field name="quantity" type="measure"/>
+                    <field name="price" type="measure"/>
+                    <field name="amount_total" type="measure"/>
+                    <field name="total_lines" type="measure"/>
+                </pivot>
+            </field>
+        </record>
+
+        <!-- Graph View - 圖表分析 -->
+        <record id="view_field_training_graph" model="ir.ui.view">
+            <field name="name">cpk.field.training.graph</field>
+            <field name="model">cpk.field.training</field>
+            <field name="arch" type="xml">
+                <graph string="欄位類型訓練圖表分析" sample="1" type="bar">
+                    <!-- 分組維度 -->
+                    <field name="status"/>
+                    <field name="start_date" interval="month"/>
+                    
+                    <!-- 測量值 -->
+                    <field name="amount_total" type="measure"/>
+                </graph>
+            </field>
+        </record>
+
+        <!-- Dashboard/Kanban View - 儀表板檢視 -->
+        <record id="view_field_training_kanban" model="ir.ui.view">
+            <field name="name">cpk.field.training.kanban</field>
+            <field name="model">cpk.field.training</field>
+            <field name="arch" type="xml">
+                <kanban string="欄位類型訓練看板" sample="1" class="o_kanban_dashboard">
+                    <field name="name"/>
+                    <field name="status"/>
+                    <field name="amount_total"/>
+                    <field name="currency_id"/>
+                    <field name="partner_id"/>
+                    <field name="user_id"/>
+                    <field name="start_date"/>
+                    <field name="total_lines"/>
+                    
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_card oe_kanban_global_click">
+                                <div class="o_kanban_card_header">
+                                    <div class="o_kanban_card_header_title">
+                                        <div class="o_primary">
+                                            <strong><t t-esc="record.name.value"/></strong>
+                                        </div>
+                                        <div class="o_secondary">
+                                            <t t-esc="record.partner_id.value"/>
+                                        </div>
+                                    </div>
+                                    <div class="o_kanban_card_manage_pane dropdown">
+                                        <a class="dropdown-toggle btn" data-toggle="dropdown" href="#" role="button">
+                                            <i class="fa fa-ellipsis-v"/>
+                                        </a>
+                                        <div class="dropdown-menu" role="menu">
+                                            <a type="edit" role="menuitem" class="dropdown-item">編輯</a>
+                                            <a type="delete" role="menuitem" class="dropdown-item">刪除</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="o_kanban_card_content">
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <span class="badge badge-primary">
+                                                狀態: <t t-esc="record.status.value"/>
+                                            </span>
+                                        </div>
+                                        <div class="col-6 text-right">
+                                            <field name="amount_total" widget="monetary"/>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="row mt-2">
+                                        <div class="col-12">
+                                            <div class="text-muted">
+                                                負責人: <t t-esc="record.user_id.value"/>
+                                            </div>
+                                            <div class="text-muted">
+                                                開始日期: <t t-esc="record.start_date.value"/>
+                                            </div>
+                                            <div class="text-muted">
+                                                明細行數: <t t-esc="record.total_lines.value"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="o_kanban_card_footer">
+                                    <div class="o_kanban_record_bottom">
+                                        <div class="oe_kanban_bottom_left">
+                                            <div class="o_activity_summary"/>
+                                        </div>
+                                        <div class="oe_kanban_bottom_right">
+                                            <img t-att-src="kanban_image('res.users', 'avatar_128', record.user_id.raw_value)" 
+                                                 t-att-title="record.user_id.value" 
+                                                 class="o_avatar o_kanban_avatar"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <!-- Calendar View - 行事曆檢視 -->
+        <record id="view_field_training_calendar" model="ir.ui.view">
+            <field name="name">cpk.field.training.calendar</field>
+            <field name="model">cpk.field.training</field>
+            <field name="arch" type="xml">
+                <calendar string="欄位類型訓練行事曆" 
+                          date_start="start_date" 
+                          color="user_id" 
+                          event_open_popup="true"
+                          quick_add="false">
+                    <field name="name"/>
+                    <field name="partner_id"/>
+                    <field name="status"/>
+                    <field name="amount_total"/>
+                </calendar>
+            </field>
+        </record>
+
+        <!-- 報表分析專用 Action -->
+        <record id="action_field_training_analysis" model="ir.actions.act_window">
+            <field name="name">欄位類型訓練分析</field>
+            <field name="res_model">cpk.field.training</field>
+            <field name="view_mode">tree,graph,pivot,kanban,calendar</field>
+            <field name="context">{
+                'search_default_group_status': 1,
+                'search_default_group_user': 1
+            }</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    沒有分析資料！
+                </p>
+                <p>
+                    這裡提供欄位類型訓練的多維度分析：<br/>
+                    • <strong>列表檢視</strong>：詳細資料列表瀏覽<br/>
+                    • <strong>圖表分析</strong>：視覺化數據趨勢<br/>
+                    • <strong>樞紐分析</strong>：多維度數據透視<br/>
+                    • <strong>看板檢視</strong>：卡片式資料瀏覽<br/>
+                    • <strong>行事曆</strong>：時間軸資料檢視<br/>
+                </p>
+            </field>
+        </record>
+
+    </data>
+</odoo>

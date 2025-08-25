@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- 批次套用價格檔精靈 Form View -->
+    <record id="view_cpk_pricelist_apply_wizard_form" model="ir.ui.view">
+        <field name="name">cpk.pricelist.apply.wizard.form</field>
+        <field name="model">cpk.pricelist.apply.wizard</field>
+        <field name="arch" type="xml">
+            <form string="批次套用價格檔">
+                <div class="alert alert-info" role="alert" 
+                     attrs="{'invisible': [('result_log', '!=', False)]}">
+                    <p><strong>批次套用價格檔精靈</strong></p>
+                    <p>此功能將選定的折扣方案套用到價格檔中，自動建立對應的價格項目。</p>
+                </div>
+
+                <!-- 成功訊息 -->
+                <div class="alert alert-success" role="alert" 
+                     attrs="{'invisible': [('pricelist_count', '=', 0)]}">
+                    <p><strong><i class="fa fa-check-circle"/> 套用完成！</strong></p>
+                    <p>處理價格檔：<field name="pricelist_count"/> 個</p>
+                    <p>建立價格項目：<field name="item_count"/> 個</p>
+                </div>
+
+                <group attrs="{'invisible': [('result_log', '!=', False)]}">
+                    <group name="scheme_info">
+                        <field name="scheme_id" 
+                               options="{'no_create': True, 'no_create_edit': True}"/>
+                    </group>
+                </group>
+
+                <group string="套用設定" attrs="{'invisible': [('result_log', '!=', False)]}">
+                    <group>
+                        <field name="apply_mode" widget="radio"/>
+                    </group>
+                </group>
+
+                <!-- 選定價格檔模式 -->
+                <group string="選擇價格檔" 
+                       attrs="{'invisible': ['|', ('apply_mode', '!=', 'selected'), ('result_log', '!=', False)]}">
+                    <field name="pricelist_ids" nolabel="1" 
+                           options="{'no_create': True, 'no_create_edit': True}">
+                        <tree>
+                            <field name="name"/>
+                            <field name="currency_id"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="active"/>
+                        </tree>
+                    </field>
+                </group>
+
+                <!-- 篩選條件模式 -->
+                <group string="篩選條件" 
+                       attrs="{'invisible': ['|', ('apply_mode', '!=', 'filtered'), ('result_log', '!=', False)]}">
+                    <group>
+                        <field name="company_id" groups="base.group_multi_company"/>
+                        <field name="currency_id"/>
+                    </group>
+                    <group>
+                        <field name="pricelist_name_filter"/>
+                    </group>
+                </group>
+
+                <!-- 套用選項 -->
+                <group string="套用選項" attrs="{'invisible': [('result_log', '!=', False)]}">
+                    <field name="update_existing"/>
+                    <field name="remove_expired"/>
+                </group>
+
+                <!-- 執行結果 -->
+                <group string="執行結果" attrs="{'invisible': [('result_log', '=', False)]}">
+                    <field name="result_log" nolabel="1" readonly="1" 
+                           widget="text" style="height: 200px;"/>
+                </group>
+
+                <footer>
+                    <!-- 執行前按鈕 -->
+                    <div attrs="{'invisible': [('result_log', '!=', False)]}">
+                        <button name="action_preview_changes" string="預覽變更" 
+                                type="object" class="btn-secondary"/>
+                        <button name="action_apply_to_pricelists" string="開始套用" 
+                                type="object" class="btn-primary"/>
+                        <button string="取消" class="btn-secondary" special="cancel"/>
+                    </div>
+                    
+                    <!-- 執行後按鈕 -->
+                    <div attrs="{'invisible': [('result_log', '=', False)]}">
+                        <button string="完成" class="btn-primary" special="cancel"/>
+                    </div>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- 精靈動作 -->
+    <record id="action_cpk_pricelist_apply_wizard" model="ir.actions.act_window">
+        <field name="name">批次套用價格檔</field>
+        <field name="res_model">cpk.pricelist.apply.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>
